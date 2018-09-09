@@ -1,0 +1,35 @@
+alertmanager:
+  nodeSelector:
+    region: node
+
+
+prometheus:
+  nodeSelector:
+    region: node
+  storageSpec:
+    volumeClaimTemplate:
+      spec:
+        storageClassName: gp2
+        accessModes: ["ReadWriteOnce"]
+        resources:
+          requests:
+            storage: 200Gi
+      selector: {}
+
+grafana:
+  nodeSelector:
+    region: node
+  storageSpec:
+    class: gp2
+    accessMode: "ReadWriteOnce"
+    resources:
+      requests:
+        storage: 10Gi
+    selector: {}
+
+deployKubelets: true
+deployKubeScheduler: false
+deployKubeControllerManager: false
+deployCoreDNS: false
+deployKubeDNS: false
+deployKubeEtcd: false
