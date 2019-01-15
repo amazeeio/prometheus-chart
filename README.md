@@ -45,4 +45,13 @@ As OpenShift has much higher security standards than a regular Kubernetes, the i
 
         helm --tiller-namespace tiller upgrade --install prometheus-test coreos/kube-prometheus --namespace prometheus-test -f values.yaml
 
-8. Create Routes for Grafana and Prometheus via the OpenShift UI
+
+# Mysql exporter
+
+1. Create "mysql-exporter" user on the DB instance and grant access
+        GRANT PROCESS, REPLICATION CLIENT, SELECT ON *.* TO 'mysql-exporter'@'%' identified by 'password' with grant option;
+
+2. Deploy mysql-exporter into "prometheus-prod" namespace:
+        helm --tiller-namespace tiller upgrade --install mysql-exporter stable/prometheus-mysql-exporter --set datasource="mysql-exporter:password@(mysql-hostname:3306)/" --namespace prometheus-prod
+
+3. Configure Prometheus to scrape the above
