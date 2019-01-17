@@ -28,6 +28,12 @@ grafana:
     selector: {}
   ## Keep the Dashboards that are defined in this HELM chart
   keepOriginalDashboards: false
+  ## Disable anonymous auth
+  auth:
+    anonymous:
+      enabled: "false"
+  adminUser: "admin"
+  adminPassword: "admin"
 
 deployKubelets: true
 deployKubeScheduler: false
