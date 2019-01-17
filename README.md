@@ -13,29 +13,35 @@ This Prometheus Helm Chart contains customizations for OpenShift and specificall
 
 As OpenShift has much higher security standards than a regular Kubernetes, the installation is a bit tricky:
 
-1. Optional: If helm/tiller is not installed make sure tiller server is installed by following https://blog.openshift.com/getting-started-helm-openshift/
+## Dependency: Tiller
+
+1. If helm/tiller is not installed make sure tiller server is installed by following https://blog.openshift.com/getting-started-helm-openshift/
 
 > Note: tiller requires admin cluster role. Add it with:
 
         oc adm policy add-cluster-role-to-user cluster-admin system:serviceaccount:tiller:tiller
 
-2. Create a new OpenShift Project (here we're using `prometheus-test` but it can be anything)
+## Dependency: Prometheus Operator
+
+1. Create a new OpenShift Project (here we're using `prometheus-test` but it can be anything)
 
         oc new-project prometheus-test
 
-3. Allow the project to use all nodes, not just only the compute nodes (needed for the NodeExporter)
+2. Allow the project to use all nodes, not just only the compute nodes (needed for the NodeExporter)
 
         oc annotate namespace prometheus-test openshift.io/node-selector=
 
-4. Install the Prometheus operator.
+3. Install the Prometheus operator.
 
         helm --tiller-namespace tiller install coreos/prometheus-operator --name prometheus-operator-test --namespace prometheus-test
 
-5. The Prometheus operator needs cluster admin rights, so provide that:
+4. The Prometheus operator needs cluster admin rights, so provide that:
 
         oc adm policy add-cluster-role-to-user cluster-admin -z prometheus-operator-test --namespace prometheus-test
 
-6. Install kube-prometheus (this will actually install Prometheus):
+## Install kube-prometheus
+
+6. Install kube-prometheus (this will actually install Prometheus/Grafana/Alertmanager):
 
         helm --tiller-namespace tiller upgrade --install prometheus-test coreos/kube-prometheus --namespace prometheus-test -f values.yaml
 
