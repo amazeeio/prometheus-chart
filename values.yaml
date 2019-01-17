@@ -26,6 +26,8 @@ grafana:
       requests:
         storage: 10Gi
     selector: {}
+  ## Keep the Dashboards that are defined in this HELM chart
+  keepOriginalDashboards: false
 
 deployKubelets: true
 deployKubeScheduler: false
