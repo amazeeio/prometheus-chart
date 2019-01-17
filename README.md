@@ -67,4 +67,4 @@ As OpenShift has much higher security standards than a regular Kubernetes, the i
 2. Deploy mysql-exporter into "prometheus-prod" namespace:
         helm --tiller-namespace tiller upgrade --install mysql-exporter stable/prometheus-mysql-exporter --set datasource="mysql-exporter:password@(mysql-hostname:3306)/" --namespace prometheus-prod
 
-3. Configure Prometheus to scrape the above
+3. Configure Prometheus to scrape the above. See example config in `values.yaml`.
