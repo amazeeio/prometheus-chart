@@ -68,3 +68,16 @@ As OpenShift has much higher security standards than a regular Kubernetes, the i
         helm --tiller-namespace tiller upgrade --install mysql-exporter stable/prometheus-mysql-exporter --set datasource="mysql-exporter:password@(mysql-hostname:3306)/" --namespace prometheus-prod
 
 3. Configure Prometheus to scrape the above. See example config in `values.yaml`.
+
+# Nginx proxy in front of Prometheus and Alertmanager
+
+Setup basic authentication by putting nginx in front of Prometheus and Alertmanager services.
+
+1. Deploy nginx inside prometheus namespace:
+        oc new-app amazeeio/nginx
+
+2. Create ConfigMap and mount it inside the nginx container to `/etc/nginx/conf.d` See `nginx-prometheus.conf`
+
+3. Create routes for Prometheus and Alertmanager with appropriate hostnames pointing to nginx service
+
+4. Add `BASIC_AUTH_USERNAME` and `BASIC_AUTH_PASSWORD` environment variables to nginx deployment
