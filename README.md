@@ -31,11 +31,15 @@ As OpenShift has much higher security standards than a regular Kubernetes, the i
 
         oc annotate namespace prometheus-test openshift.io/node-selector=
 
-3. Install the Prometheus operator.
+3. Add coreos repo to helm
+
+        helm repo add coreos https://s3-eu-west-1.amazonaws.com/coreos-charts/stable/
+
+4. Install the Prometheus operator.
 
         helm --tiller-namespace tiller install coreos/prometheus-operator --name prometheus-operator-test --namespace prometheus-test
 
-4. The Prometheus operator needs cluster admin rights, so provide that:
+5. The Prometheus operator needs cluster admin rights, so provide that:
 
         oc adm policy add-cluster-role-to-user cluster-admin -z prometheus-operator-test --namespace prometheus-test
 
