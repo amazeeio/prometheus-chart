@@ -107,6 +107,78 @@ prometheus:
   #       annotations:
   #         description: Probe is failing
 
+  additionalScrapeConfigs:
+
+    - job_name: blackbox-ingress
+      metrics_path: /probe
+      params:
+        module: [http_2xx_ssl]
+      kubernetes_sd_configs:
+        - role: ingress
+      relabel_configs:
+        - source_labels: [__meta_kubernetes_ingress_annotation_prometheus_io_probe]
+          action: keep
+          regex: true
+        - source_labels: [__meta_kubernetes_ingress_scheme,__address__,__meta_kubernetes_ingress_path]
+          regex: (.+);(.+);(.+)
+          replacement: ${1}://${2}${3}
+          target_label: __param_target
+        - source_labels: [__address__]
+          regex: (.*)(:80)?
+          target_label: __param_target
+        - target_label: __address__
+          replacement: blackbox-exporter-prometheus-blackbox-exporter.prometheus-test.svc:9115
+        - source_labels: [__param_target]
+          target_label: instance
+        - action: labelmap
+          regex: __meta_kubernetes_ingress_label_(.+)
+        - source_labels: [__meta_kubernetes_namespace]
+          target_label: kubernetes_namespace
+        - source_labels: [__meta_kubernetes_ingress_name]
+          target_label: kubernetes_name
+
+  # - job_name: blackbox-static
+  #   metrics_path: /probe
+  #   params:
+  #     module: [http_2xx]
+  #   static_configs:
+  #     - targets:
+  #       - grafana-test.au.amazee.io
+  #   relabel_configs:
+  #     - source_labels: [__address__]
+  #       regex: (.*)(:80)?
+  #       target_label: __param_target
+  #     - source_labels: [__param_target]
+  #       target_label: instance
+  #     - source_labels: []
+  #       target_label: __address__
+  #       replacement: blackbox-exporter-prometheus-blackbox-exporter.prometheus-test.svc:9115
+
+  # - job_name: blackbox-services
+  #   metrics_path: /probe
+  #   params:
+  #     module: [http_2xx]
+  #   kubernetes_sd_configs:
+  #   - role: service
+  #   relabel_configs:
+  #   # Example relabel to probe only some services that have "example.io/should_be_probed = true" annotation
+  #   #  - source_labels: [__meta_kubernetes_service_annotation_example_io_should_be_probed]
+  #   #    action: keep
+  #   #    regex: true
+  #   - source_labels: [__address__]
+  #     target_label: __param_target
+  #   - target_label: __address__
+  #     replacement: blackbox-exporter-prometheus-blackbox-exporter.prometheus-test.svc:9115
+  #   - source_labels: [__param_target]
+  #     target_label: instance
+  #   - action: labelmap
+  #     regex: __meta_kubernetes_service_label_(.+)
+  #   - source_labels: [__meta_kubernetes_namespace]
+  #     target_label: kubernetes_namespace
+  #   - source_labels: [__meta_kubernetes_service_name]
+  #     target_label: kubernetes_name
+
+
 grafana:
   nodeSelector:
     region: node

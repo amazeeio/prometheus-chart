@@ -39,6 +39,10 @@ As OpenShift has much higher security standards than a regular Kubernetes, the i
 
         oc adm policy add-cluster-role-to-user cluster-admin -z prometheus-operator-test --namespace prometheus-test
 
+5. `prometheus-test` service account also needs additional permissions. Namely this is used to scrape cluster wide Ingresses.
+
+        oc adm policy add-cluster-role-to-user cluster-admin -z prometheus-test --namespace prometheus-test
+
 ## Install kube-prometheus
 
 6. Install kube-prometheus (this will actually install Prometheus/Grafana/Alertmanager):
@@ -81,3 +85,7 @@ Setup basic authentication by putting nginx in front of Prometheus and Alertmana
 3. Create routes for Prometheus and Alertmanager with appropriate hostnames pointing to nginx service
 
 4. Add `BASIC_AUTH_USERNAME` and `BASIC_AUTH_PASSWORD` environment variables to nginx deployment
+
+# Blackbox exporter
+
+1. Deploy helm --tiller-namespace tiller upgrade --install blackbox-exporter stable/prometheus-blackbox-exporter --namespace prometheus-test
