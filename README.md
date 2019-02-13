@@ -1,6 +1,6 @@
-# amazee.io Prometheus Chart
+# lagoon Prometheus Chart
 
-This Prometheus Helm Chart contains customizations for OpenShift and specifically amazee.io OpenShift Clusters.
+This Prometheus Helm Chart contains customizations for OpenShift and specifically lagoon OpenShift Clusters.
 
 # Usage
 
@@ -78,7 +78,7 @@ As OpenShift has much higher security standards than a regular Kubernetes, the i
 Setup basic authentication by putting nginx in front of Prometheus and Alertmanager services.
 
 1. Deploy nginx inside prometheus namespace:
-        oc new-app amazeeio/nginx
+        oc new-app lagoon/nginx
 
 2. Create ConfigMap and mount it inside the nginx container to `/etc/nginx/conf.d` See `nginx-prometheus.conf`
 
